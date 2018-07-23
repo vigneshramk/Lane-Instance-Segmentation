@@ -1,9 +1,12 @@
-from enet_modules import ENetInitialBlock,ENetNormalBottleneck
-from enet_modules import ENetDownsamplingBottleneck,ENetUpsamplingBottleneck
+from .enet_blocks import ENetInitialBlock,ENetNormalBottleneck
+from .enet_blocks import ENetDownsamplingBottleneck,ENetUpsamplingBottleneck
+import torch.nn as nn
+import torch
+from torch.autograd import Variable
 
 class ENetModel(nn.Module):
 
-	def __init__(self, num_classes, encoder_nonlinearity='PReLU', decoder_nonlinearity='ReLU'):
+    def __init__(self, num_classes, encoder_nonlinearity='PReLU', decoder_nonlinearity='ReLU'):
         super().__init__()
 
         # The initial block with 3 input channels and 16 output channels
@@ -134,7 +137,7 @@ class ENetModel(nn.Module):
             bias=False)
 
     def forward(self,x):
-    	# Initial block
+        # Initial block
         x = self.initial_block(x)
 
         # Stage 1 - Encoder
