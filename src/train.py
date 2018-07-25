@@ -9,6 +9,7 @@ import torch.utils.data as data
 from torch.autograd import Variable
 from .arguments import get_args
 from .metrics.iou import IoU
+import numpy as np
 
 args = get_args()
 
@@ -45,9 +46,7 @@ class TrainNetwork():
         # Change according to the loader
         for i,img_data in enumerate(self.data_loader):
             images, labels, size, name = img_data
-            images = images.cpu().data
-            images, labels = Variable(images), Variable(labels)
-            images = images.type(torch.FloatTensor)
+            images,labels = images.type(torch.FloatTensor),labels.type(torch.LongTensor)
             if self.run_cuda:
                 images = images.cuda()
                 labels = labels.cuda()
@@ -62,10 +61,10 @@ class TrainNetwork():
             self.optimizer.step()
 
             total_loss += loss.data[0]
-            self.metric.add(outputs.data,labels.data)
+            self.metric.add(output.data,labels.data)
 
             if interactive:
-                print("Mini-Batch-Number: %d, Loss : %.2f" %(i,loss.data[0]))
+                print("Mini-Batch-Number: %d, Loss : %.5f" %(i,loss.data[0]))
 
         return epoch_loss / self.data_size, self.metric.value()
 
