@@ -13,9 +13,11 @@ args = get_args()
 
 class TrainNetwork():
 
-	def __init__(self,model,data_loader,class_weights,class_encoding):
+	def __init__(self,model,data_loader,num_classes):
 
-		num_classes = len(class_encoding)
+		#class_weights,class_encoding
+		#num_classes = len(class_encoding)
+		
 		self.run_cuda = args.cuda and torch.cuda.is_available()
 		self.model = model
 		self.data_loader = data_loader
@@ -27,26 +29,28 @@ class TrainNetwork():
 			        lr=args.learning_rate,
 			        weight_decay=args.weight_decay)
 
-		self.criterion = nn.CrossEntropyLoss(weight=class_weights)
+		self.criterion = nn.CrossEntropyLoss() #weight=class_weights
 		if self.run_cuda:
 	        model = model.cuda()
 	        criterion = criterion.cuda()
 		self.metric = IoU(num_classes)
 
+		self.start_epoch = 0
 
-	def run_epoch(self, interactive=False):
+
+	def train_epoch(self, interactive=False):
 		total_loss = 0.0
 		self.metric.reset()
 		# Change according to the loader
 		for i,data in enumerate(self.data_loader):
-			inputs, labels = data
-            inputs, labels = Variable(inputs), Variable(labels)
+			images, labels, size, name = data
+            images, labels = Variable(images), Variable(labels)
             if self.run_cuda:
-                inputs = inputs.cuda()
+                images = images.cuda()
                 labels = labels.cuda()
 
             # Do the forward prop and compute the cross-entropy loss    
-            output = self.model(inputs)
+            output = self.model(images)
             loss = self.criterion(output,labels)
 
             #Backprop
@@ -61,6 +65,15 @@ class TrainNetwork():
             	print("Mini-Batch-Number: %d, Loss : %.2f" %(i,loss.data[0]))
 
     	return epoch_loss / self.data_size, self.metric.value()
+
+	def train_model(self,interactive=True):
+		for epoch in range(self.start_epoch,args.epochs):
+			epoch_loss, (iou, miou) = train.run_epoch(interactive)
+
+			print(">>>> [Epoch: {0:d}] Avg. loss: {1:.4f} | Mean IoU: {2:.4f}".
+              format(epoch, epoch_loss, miou))
+
+
 
 
 
