@@ -41,5 +41,18 @@ def get_args():
         type=float,
         default=2e-4,
         help="L2 regularization factor. Default: 2e-4")
+    parser.add_argument(
+        "--epochs",
+        type=int,
+        default=100,
+        help="Number of training epochs. Default: 300")
+    
+
+    parser.add_argument(
+        "--run-cuda",
+        dest='cuda',
+        default='store_false',
+        help="CPU only.")
+
 
     return parser.parse_args()

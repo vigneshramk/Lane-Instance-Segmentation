@@ -48,7 +48,7 @@ class ENetModel(nn.Module):
             128,
             kernel_size=5,
             padding=2,
-            asymmetric=True,
+            asymmetric_conv=True,
             dropout_prob=0.1,
             nonlinearity=encoder_nonlinearity)
         # Dilated Conv layer
@@ -64,7 +64,7 @@ class ENetModel(nn.Module):
         self.bottleneck2_7 = ENetNormalBottleneck(
             128,
             kernel_size=5,
-            asymmetric=True,
+            asymmetric_conv=True,
             padding=2,
             dropout_prob=0.1,
             nonlinearity=encoder_nonlinearity)
@@ -86,7 +86,7 @@ class ENetModel(nn.Module):
             128,
             kernel_size=5,
             padding=2,
-            asymmetric=True,
+            asymmetric_conv=True,
             dropout_prob=0.1,
             nonlinearity=encoder_nonlinearity)
         # Dilated Conv layer
@@ -102,7 +102,7 @@ class ENetModel(nn.Module):
         self.bottleneck3_6 = ENetNormalBottleneck(
             128,
             kernel_size=5,
-            asymmetric=True,
+            asymmetric_conv=True,
             padding=2,
             dropout_prob=0.1,
             nonlinearity=encoder_nonlinearity)

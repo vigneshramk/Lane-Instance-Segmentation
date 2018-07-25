@@ -69,7 +69,7 @@ class ENetNormalBottleneck(nn.Module):
             activation = nn.ReLU()
 
         # For the 1x1 convolution, check if the filter reduce ratio is above 1 and below the number of input channels
-        if reduce_ratio <= 1 or reduce_ratio > channels:
+        if reduce_ratio <= 1 or reduce_ratio > in_channels:
             raise RuntimeError("The filter reduce ratio should be in the"
                                "interval [1, {0}], got reduce_ratio={1}."
                                .format(channels, reduce_ratio))
@@ -83,7 +83,7 @@ class ENetNormalBottleneck(nn.Module):
         # Step 1: Do a 1x1 projection convolution to do dimensionality reduction
         self.conv1 = nn.Sequential(
             nn.Conv2d(
-                channels,
+                in_channels,
                 reduced_channels,
                 kernel_size=1,
                 stride=1,
@@ -91,7 +91,7 @@ class ENetNormalBottleneck(nn.Module):
 
         # Step 2: Do either a symmetric 3x3 convolution or 
         # an assymetric convolution defined as two convolutions: 5x1 followed by a 1x5
-        if assymetric_conv:
+        if asymmetric_conv:
             self.conv2 = nn.Sequential(nn.Conv2d(
                     reduced_channels,
                     reduced_channels,
@@ -122,10 +122,10 @@ class ENetNormalBottleneck(nn.Module):
         # to the input channels to the module
         self.conv3 = nn.Sequential(nn.Conv2d(
                 reduced_channels,
-                channels,
+                in_channels,
                 kernel_size=1,
                 stride=1,
-                bias=bias), nn.BatchNorm2d(channels), activation)
+                bias=bias), nn.BatchNorm2d(in_channels), activation)
 
         # Dropout as a weak form of regularization
         self.regularizer = nn.Dropout2d(p=dropout_prob)
@@ -169,9 +169,11 @@ class ENetDownsamplingBottleneck(nn.Module):
         else:
             activation = nn.ReLU()
 
+        self.return_indices = return_indices
+
         # For the 1x1 convolution, check if the filter reduce ratio is 
         # above 1 and below the number of input channels
-        if reduce_ratio <= 1 or reduce_ratio > channels:
+        if reduce_ratio <= 1 or reduce_ratio > in_channels:
             raise RuntimeError("The filter reduce ratio should be in the"
                                "interval [1, {0}], got reduce_ratio={1}."
                                .format(channels, reduce_ratio))
@@ -270,7 +272,7 @@ class ENetUpsamplingBottleneck(nn.Module):
 
         # For the 1x1 convolution, check if the filter reduce ratio is 
         # above 1 and below the number of input channels
-        if reduce_ratio <= 1 or reduce_ratio > channels:
+        if reduce_ratio <= 1 or reduce_ratio > in_channels:
             raise RuntimeError("The filter reduce ratio should be in the"
                                "interval [1, {0}], got reduce_ratio={1}."
                                .format(channels, reduce_ratio))

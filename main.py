@@ -27,6 +27,20 @@ DATA_DIRECTORY = './dataset/bdd100k'
 DATA_LIST_PATH = './dataset/list/train_list.txt'
 INPUT_SIZE = '720,720'
 
+def get_arguments():
+    parser = argparse.ArgumentParser(description="Lane Instance Segmentation - BDD Dataset")
+    parser.add_argument("--batch-size", type=int, default=BATCH_SIZE,
+                        help="Number of images sent to the network in one step.")
+    parser.add_argument("--data-dir", type=str, default=DATA_DIRECTORY,
+                        help="Path to the directory containing the PASCAL VOC dataset.")
+    parser.add_argument("--data-list", type=str, default=DATA_LIST_PATH,
+                        help="Path to the file listing the images in the dataset.")
+    parser.add_argument("--input-size", type=str, default=INPUT_SIZE,
+                        help="Comma-separated string with height and width of images.")
+    return parser.parse_args()
+
+args = get_arguments()
+
 def main():
 
     h, w = map(int, args.input_size.split(','))
@@ -34,9 +48,11 @@ def main():
 
     train_dataset = BDD_Train_DataSet(args.data_dir, args.data_list, crop_size=input_size)
     train_dataset_size = len(train_dataset)
+
+    num_classes =3
     
     data_loader = data.DataLoader(train_dataset,batch_size=args.batch_size, shuffle=True, num_workers=5, pin_memory=True)
-    model = ENetModel(num_classes=3)
+    model = ENetModel(num_classes)
 
     train_net = TrainNetwork(model,data_loader,num_classes)
 
