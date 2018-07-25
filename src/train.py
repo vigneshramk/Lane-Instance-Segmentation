@@ -10,7 +10,7 @@ from torch.autograd import Variable
 from .arguments import get_args
 from .metrics.iou import IoU
 import numpy as np
-from utils import save_checkpoint
+from .utils import save_checkpoint
 
 args = get_args()
 

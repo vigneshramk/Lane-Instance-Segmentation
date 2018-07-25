@@ -21,8 +21,8 @@ import random
 import timeit
 from src.train import TrainNetwork
 from models.enet_model import ENetModel
-
-BATCH_SIZE = 1
+os.environ["CUDA_VISIBLE_DEVICES"]="5"
+BATCH_SIZE = 5
 DATA_DIRECTORY = './dataset/bdd100k'
 DATA_LIST_PATH = './dataset/list/train_list.txt'
 INPUT_SIZE = '720,720'
