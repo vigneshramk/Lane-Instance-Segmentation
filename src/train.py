@@ -10,6 +10,7 @@ from torch.autograd import Variable
 from .arguments import get_args
 from .metrics.iou import IoU
 import numpy as np
+from utils import save_checkpoint
 
 args = get_args()
 
@@ -39,8 +40,16 @@ class TrainNetwork():
 
         self.start_epoch = 0
 
+    def save_model(self,epoch):
+        filename = '../saved_models/checkpoint_' + str(epoch) + '.h5'
+        save_checkpoint({
+            'epoch': epoch + 1,
+            'state_dict': self.model.state_dict(),
+            'optimizer' : self.optimizer.state_dict(),
+        },filename=filename)
 
-    def train_epoch(self, interactive=False):
+    def train_epoch(self,interactive=False):
+
         total_loss = 0.0
         self.metric.reset()
         # Change according to the loader
@@ -50,6 +59,9 @@ class TrainNetwork():
             if self.run_cuda:
                 images = images.cuda()
                 labels = labels.cuda()
+
+            # labels = labels.unsqueeze_(1)    
+            # labels = make_one_hot(labels,3)
 
             # Do the forward prop and compute the cross-entropy loss    
             output = self.model(images)
@@ -68,12 +80,34 @@ class TrainNetwork():
 
         return epoch_loss / self.data_size, self.metric.value()
 
-    def train_model(self,interactive=True):
+    def train_model(self,interactive=True,save_freq=5):
         for epoch in range(self.start_epoch,args.epochs):
             epoch_loss, (iou, miou) = self.train_epoch(interactive)
 
+            if epoch%save_freq == 0:
+                self.save_model(epoch)
+
             print(">>>> [Epoch: {0:d}] Avg. loss: {1:.4f} | Mean IoU: {2:.4f}".
               format(epoch, epoch_loss, miou))
+
+
+    # def make_one_hot(labels, num_classes):
+    #         '''
+    #         Converts an integer label torch.autograd.Variable to a one-hot Variable.
+
+    #         Parameters
+    #         ----------
+    #         labels : torch.autograd.Variable of torch.cuda.LongTensor
+    #             N x 1 x H x W, where N is batch size.
+    #             Each value is an integer representing correct classification.
+    #         Returns
+    #         -------
+    #         target : torch.autograd.Variable of torch.cuda.FloatTensor
+    #             N x C x H x W, where C is class number. One-hot encoded.
+    #         '''
+    #         one_hot = torch.cuda.LongTensor(labels.size(0), num_classes, labels.size(2), labels.size(3)).zero_()
+    #         target = one_hot.scatter_(1, labels.data, 1) 
+    #         return target
 
 
 

@@ -22,7 +22,7 @@ import timeit
 from src.train import TrainNetwork
 from models.enet_model import ENetModel
 
-BATCH_SIZE = 5
+BATCH_SIZE = 1
 DATA_DIRECTORY = './dataset/bdd100k'
 DATA_LIST_PATH = './dataset/list/train_list.txt'
 INPUT_SIZE = '720,720'
@@ -51,7 +51,7 @@ def main():
 
     num_classes =3
     
-    data_loader = data.DataLoader(train_dataset,batch_size=args.batch_size, shuffle=True, num_workers=5, pin_memory=True)
+    data_loader = data.DataLoader(train_dataset,batch_size=args.batch_size, shuffle=True, num_workers=1, pin_memory=True)
     model = ENetModel(num_classes)
 
     train_net = TrainNetwork(model,data_loader,num_classes)
