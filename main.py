@@ -28,24 +28,6 @@ DATA_DIRECTORY = './dataset/bdd100k'
 DATA_LIST_PATH = './dataset/list/train_list.txt'
 INPUT_SIZE = '720,720'
 
-def get_arguments():
-    parser = argparse.ArgumentParser(description="Lane Instance Segmentation - BDD Dataset")
-    parser.add_argument("--batch-size","-b",type=int, default=BATCH_SIZE,
-                        help="Number of images sent to the network in one step.")
-    parser.add_argument("--data-dir", type=str, default=DATA_DIRECTORY,
-                        help="Path to the directory containing the PASCAL VOC dataset.")
-    parser.add_argument("--data-list", type=str, default=DATA_LIST_PATH,
-                        help="Path to the file listing the images in the dataset.")
-    parser.add_argument("--input-size", type=str, default=INPUT_SIZE,
-                        help="Comma-separated string with height and width of images.")
-    parser.add_argument("--gpu-select",'-g',type=str, default="0",
-                        help="Select the GPU to run the program on")
-    parser.add_argument("--run-name","-rn",type=str, default='run_def',
-                        help="Choose the folder name to which the checkpoints should be saved")
-    return parser.parse_args()
-
-args = get_arguments()
-
 #Select the GPU to run the network on
 os.environ["CUDA_VISIBLE_DEVICES"]=args.gpu_select
 
