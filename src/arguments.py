@@ -1,9 +1,13 @@
 from argparse import ArgumentParser
 
+BATCH_SIZE = 10
+DATA_DIRECTORY = './dataset/bdd100k'
+DATA_LIST_PATH = './dataset/list/train_list.txt'
+INPUT_SIZE = '720,720'
 
 def get_args():
 
-    parser = argparse.ArgumentParser(description="Lane Instance Segmentation - BDD Dataset")
+    parser = ArgumentParser(description="Lane Instance Segmentation - BDD Dataset")
 
     # Training model hyperparameters
     # parser.add_argument(

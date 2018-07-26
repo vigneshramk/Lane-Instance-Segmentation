@@ -55,7 +55,7 @@ def main():
     input_size = (h, w)
     crop_size = (int(h),int(w))
 
-    directory = 'saved_models' + args.run_name + '/'
+    directory = 'saved_models/' + args.run_name + '/'
     if not os.path.exists(directory):
             os.makedirs(directory)
 
