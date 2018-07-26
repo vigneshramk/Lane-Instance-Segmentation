@@ -78,7 +78,7 @@ class TrainNetwork():
             if interactive:
                 print("Mini-Batch-Number: %d, Loss : %.5f" %(i,loss.data[0]))
 
-        return epoch_loss / self.data_size, self.metric.value()
+        return total_loss / self.data_size, self.metric.value()
 
     def train_model(self,interactive=True,save_freq=5):
         for epoch in range(self.start_epoch,args.epochs):
