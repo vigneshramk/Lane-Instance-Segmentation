@@ -21,12 +21,14 @@ import random
 import timeit
 from src.train import TrainNetwork
 from models.enet_model import ENetModel
-
+from src.arguments import get_args
 
 BATCH_SIZE = 10
 DATA_DIRECTORY = './dataset/bdd100k'
 DATA_LIST_PATH = './dataset/list/train_list.txt'
 INPUT_SIZE = '720,720'
+
+args = get_args()
 
 #Select the GPU to run the network on
 os.environ["CUDA_VISIBLE_DEVICES"]=args.gpu_select
