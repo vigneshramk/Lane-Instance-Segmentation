@@ -51,7 +51,7 @@ def get_args():
     parser.add_argument(
         "--run-cuda",
         dest='cuda',
-        default='store_false',
+        default=True,
         help="CPU only.")
 
 

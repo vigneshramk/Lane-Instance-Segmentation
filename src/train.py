@@ -22,6 +22,7 @@ class TrainNetwork():
         #num_classes = len(class_encoding)
         
         self.run_cuda = args.cuda and torch.cuda.is_available()
+        print('Cuda is %r' %(self.run_cuda))
         self.model = model
         self.data_loader = data_loader
         self.data_size = len(self.data_loader)
@@ -52,7 +53,7 @@ class TrainNetwork():
 
         total_loss = 0.0
         self.metric.reset()
-        # Change according to the loader
+
         for i,img_data in enumerate(self.data_loader):
             images, labels, size, name = img_data
             images,labels = images.type(torch.FloatTensor),labels.type(torch.LongTensor)
@@ -80,13 +81,13 @@ class TrainNetwork():
 
         return total_loss / self.data_size, self.metric.value()
 
-    def train_model(self,interactive=True,save_freq=5):
+    def train_model(self,interactive=True,save_freq=1):
         for epoch in range(self.start_epoch,args.epochs):
+
+            epoch_loss, (iou, miou) = self.train_epoch(interactive)
 
             if epoch%save_freq == 0:
                 self.save_model(epoch)
-
-            epoch_loss, (iou, miou) = self.train_epoch(interactive)
 
             print(">>>> [Epoch: {0:d}] Avg. loss: {1:.4f} | Mean IoU: {2:.4f}".
               format(epoch, epoch_loss, miou))

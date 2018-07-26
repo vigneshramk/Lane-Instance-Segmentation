@@ -32,7 +32,7 @@ INPUT_SIZE = '720,720'
 
 def get_arguments():
     parser = argparse.ArgumentParser(description="Lane Instance Segmentation - BDD Dataset")
-    parser.add_argument("--batch-size", type=int, default=BATCH_SIZE,
+    parser.add_argument("--batch-size","-b",type=int, default=BATCH_SIZE,
                         help="Number of images sent to the network in one step.")
     parser.add_argument("--data-dir", type=str, default=DATA_DIRECTORY,
                         help="Path to the directory containing the PASCAL VOC dataset.")
