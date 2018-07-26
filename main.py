@@ -23,7 +23,7 @@ from src.train import TrainNetwork
 from models.enet_model import ENetModel
 
 os.environ["CUDA_VISIBLE_DEVICES"]="5"
-BATCH_SIZE = 10
+BATCH_SIZE = 1
 
 DATA_DIRECTORY = './dataset/bdd100k'
 DATA_LIST_PATH = './dataset/list/train_list.txt'
@@ -47,7 +47,7 @@ def main():
 
     h, w = map(int, args.input_size.split(','))
     input_size = (h, w)
-    crop_size = (h/2,w/2)
+    crop_size = (int(h/2),int(w/2))
 
     train_dataset = BDD_Train_DataSet(args.data_dir, args.data_list, crop_size=crop_size)
     train_dataset_size = len(train_dataset)

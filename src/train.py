@@ -41,7 +41,7 @@ class TrainNetwork():
         self.start_epoch = 0
 
     def save_model(self,epoch):
-        filename = '../saved_models/checkpoint_' + str(epoch) + '.h5'
+        filename = 'saved_models/checkpoint_' + str(epoch) + '.h5'
         save_checkpoint({
             'epoch': epoch + 1,
             'state_dict': self.model.state_dict(),
@@ -85,7 +85,7 @@ class TrainNetwork():
 
             if epoch%save_freq == 0:
                 self.save_model(epoch)
-                
+
             epoch_loss, (iou, miou) = self.train_epoch(interactive)
 
             print(">>>> [Epoch: {0:d}] Avg. loss: {1:.4f} | Mean IoU: {2:.4f}".
