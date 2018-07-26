@@ -22,6 +22,7 @@ import timeit
 from src.train import TrainNetwork
 from models.enet_model import ENetModel
 from src.arguments import get_args
+from src.utils import enet_weighing
 
 BATCH_SIZE = 10
 DATA_DIRECTORY = './dataset/bdd100k'
@@ -50,8 +51,13 @@ def main():
     
     data_loader = data.DataLoader(train_dataset,batch_size=args.batch_size, shuffle=True, num_workers=1, pin_memory=True)
     model = ENetModel(num_classes)
+    
+    # Calculate the class weights    
+    class_weights = enet_weighing(data_loader, num_classes)
 
-    train_net = TrainNetwork(model,data_loader,num_classes)
+    print('Finished calculating class weights')
+
+    train_net = TrainNetwork(model,data_loader,num_classes,class_weights)
 
     train_net.train_model(interactive=False,run_name=args.run_name)
 

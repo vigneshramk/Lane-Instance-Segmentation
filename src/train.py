@@ -10,13 +10,13 @@ from torch.autograd import Variable
 from .arguments import get_args
 from .metrics.iou import IoU
 import numpy as np
-from .utils import save_checkpoint,CrossEntropyLoss2D
+from .utils import save_checkpoint,CrossEntropyLoss2D,enet_weighing
 
 args = get_args()
 
 class TrainNetwork():
 
-    def __init__(self,model,data_loader,num_classes):
+    def __init__(self,model,data_loader,num_classes,class_weights):
 
         #class_weights,class_encoding
         #num_classes = len(class_encoding)
@@ -33,11 +33,11 @@ class TrainNetwork():
                     lr=args.learning_rate,
                     weight_decay=args.weight_decay)
 
-        self.criterion = CrossEntropyLoss2D() #weight=class_weights
+        self.criterion = CrossEntropyLoss2D(class_weights=class_weights) #weight=class_weights
         if self.run_cuda:
             self.model = self.model.cuda()
             self.criterion = self.criterion.cuda()
-        self.metric = IoU(num_classes)
+        self.metric = IoU(num_classes,ignore_index=0)
 
         self.start_epoch = 0
 
@@ -82,6 +82,7 @@ class TrainNetwork():
         return total_loss / self.data_size, self.metric.value()
 
     def train_model(self,interactive=True,save_freq=1,run_name="run_default"):
+
         for epoch in range(self.start_epoch,args.epochs):
 
             epoch_loss, (iou, miou) = self.train_epoch(interactive)
