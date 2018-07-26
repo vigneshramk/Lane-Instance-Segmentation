@@ -10,7 +10,7 @@ from torch.autograd import Variable
 from .arguments import get_args
 from .metrics.iou import IoU
 import numpy as np
-from .utils import save_checkpoint
+from .utils import save_checkpoint,CrossEntropyLoss2D
 
 args = get_args()
 
@@ -33,7 +33,7 @@ class TrainNetwork():
                     lr=args.learning_rate,
                     weight_decay=args.weight_decay)
 
-        self.criterion = nn.CrossEntropyLoss() #weight=class_weights
+        self.criterion = CrossEntropyLoss2D() #weight=class_weights
         if self.run_cuda:
             self.model = self.model.cuda()
             self.criterion = self.criterion.cuda()
@@ -41,8 +41,8 @@ class TrainNetwork():
 
         self.start_epoch = 0
 
-    def save_model(self,epoch):
-        filename = 'saved_models/checkpoint_' + str(epoch) + '.h5'
+    def save_model(self,run_name,epoch):
+        filename = 'saved_models/' + run_name + '/' +'checkpoint_' + str(epoch) + '.h5'
         save_checkpoint({
             'epoch': epoch + 1,
             'state_dict': self.model.state_dict(),
@@ -81,15 +81,19 @@ class TrainNetwork():
 
         return total_loss / self.data_size, self.metric.value()
 
-    def train_model(self,interactive=True,save_freq=1):
+    def train_model(self,interactive=True,save_freq=1,run_name="run_default"):
         for epoch in range(self.start_epoch,args.epochs):
 
             epoch_loss, (iou, miou) = self.train_epoch(interactive)
 
             if epoch%save_freq == 0:
-                self.save_model(epoch)
+                self.save_model(run_name,epoch)
 
             print(">>>> [Epoch: {0:d}] Avg. loss: {1:.4f} | Mean IoU: {2:.4f}".
+              format(epoch, epoch_loss, miou))
+            filename = 'saved_models/' + run_name + '/' + "verbose.txt"
+            with open(filename, "w") as text_file:
+                text_file.write(">>>> [Epoch: {0:d}] Avg. loss: {1:.4f} | Mean IoU: {2:.4f}".
               format(epoch, epoch_loss, miou))
 
 

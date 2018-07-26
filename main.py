@@ -22,10 +22,7 @@ import timeit
 from src.train import TrainNetwork
 from models.enet_model import ENetModel
 
-
-os.environ["CUDA_VISIBLE_DEVICES"]="6"
 BATCH_SIZE = 10
-
 DATA_DIRECTORY = './dataset/bdd100k'
 DATA_LIST_PATH = './dataset/list/train_list.txt'
 INPUT_SIZE = '720,720'
@@ -40,15 +37,26 @@ def get_arguments():
                         help="Path to the file listing the images in the dataset.")
     parser.add_argument("--input-size", type=str, default=INPUT_SIZE,
                         help="Comma-separated string with height and width of images.")
+    parser.add_argument("--gpu-select",'-g',type=str, default="0",
+                        help="Select the GPU to run the program on")
+    parser.add_argument("--run-name","-rn",type=str, default='run_def',
+                        help="Choose the folder name to which the checkpoints should be saved")
     return parser.parse_args()
 
 args = get_arguments()
+
+#Select the GPU to run the network on
+os.environ["CUDA_VISIBLE_DEVICES"]=args.gpu_select
 
 def main():
 
     h, w = map(int, args.input_size.split(','))
     input_size = (h, w)
     crop_size = (int(h),int(w))
+
+    directory = 'saved_models' + args.run_name + '/'
+    if not os.path.exists(directory):
+            os.makedirs(directory)
 
     train_dataset = BDD_Train_DataSet(args.data_dir, args.data_list, crop_size=crop_size)
     train_dataset_size = len(train_dataset)
@@ -60,7 +68,7 @@ def main():
 
     train_net = TrainNetwork(model,data_loader,num_classes)
 
-    train_net.train_model(interactive=False)
+    train_net.train_model(interactive=False,run_name=args.run_name)
 
 
 if __name__ == '__main__':
