@@ -82,10 +82,11 @@ class TrainNetwork():
 
     def train_model(self,interactive=True,save_freq=5):
         for epoch in range(self.start_epoch,args.epochs):
-            epoch_loss, (iou, miou) = self.train_epoch(interactive)
 
             if epoch%save_freq == 0:
                 self.save_model(epoch)
+                
+            epoch_loss, (iou, miou) = self.train_epoch(interactive)
 
             print(">>>> [Epoch: {0:d}] Avg. loss: {1:.4f} | Mean IoU: {2:.4f}".
               format(epoch, epoch_loss, miou))
