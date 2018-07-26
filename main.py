@@ -48,19 +48,19 @@ def main():
 
     h, w = map(int, args.input_size.split(','))
     input_size = (h, w)
-    crop_size = (int(h/2),int(w/2))
+    crop_size = (int(h),int(w))
 
     train_dataset = BDD_Train_DataSet(args.data_dir, args.data_list, crop_size=crop_size)
     train_dataset_size = len(train_dataset)
 
     num_classes =3
     
-    data_loader = data.DataLoader(train_dataset,batch_size=args.batch_size, shuffle=True, num_workers=1, pin_memory=True)
+    data_loader = data.DataLoader(train_dataset,batch_size=args.batch_size, shuffle=True, num_workers=5, pin_memory=True)
     model = ENetModel(num_classes)
 
     train_net = TrainNetwork(model,data_loader,num_classes)
 
-    train_net.train_model()
+    train_net.train_model(interactive=False)
 
 
 if __name__ == '__main__':
