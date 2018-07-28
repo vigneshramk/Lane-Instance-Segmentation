@@ -50,8 +50,6 @@ def get_args():
         type=int,
         default=100,
         help="Number of training epochs. Default: 300")
-    
-
     parser.add_argument(
         "--run-cuda",
         dest='cuda',
@@ -70,6 +68,10 @@ def get_args():
                         help="Select the GPU to run the program on")
     parser.add_argument("--run-name","-rn",type=str, default='run_def',
                         help="Choose the folder name to which the checkpoints should be saved")
+    parser.add_argument("--mode","-m",type=str,default='train',
+                        help="Choose to run train or test for the model")
+    parser.add_argument('--load','-l',type=str,default=None,
+                        help="Choose the checkpoint file name to test the model")
 
 
     return parser.parse_args()
