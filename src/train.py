@@ -33,12 +33,18 @@ class TrainNetwork():
                     lr=args.learning_rate,
                     weight_decay=args.weight_decay)
 
+        # Cross Entropy loss between the prediction and the label
+        # Use the class-weighting so as to account for the class imbalance
         self.criterion = CrossEntropyLoss2D(class_weights=class_weights) #weight=class_weights
+        
         if self.run_cuda:
             self.model = self.model.cuda()
             self.criterion = self.criterion.cuda()
-        self.metric = IoU(num_classes,ignore_index=0)
+        
+        # Intersection of Union as the metric to see the progress in training
+        self.metric = IoU(num_classes)
 
+        # Keeping this variable so as to resume training from a checkpoint later
         self.start_epoch = 0
 
     def save_model(self,run_name,epoch):
@@ -87,11 +93,14 @@ class TrainNetwork():
 
             epoch_loss, (iou, miou) = self.train_epoch(interactive)
 
+            # Save the checkpoint at the given frequency
             if epoch%save_freq == 0:
                 self.save_model(run_name,epoch)
 
             print(">>>> [Epoch: {0:d}] Avg. loss: {1:.4f} | Mean IoU: {2:.4f}".
               format(epoch, epoch_loss, miou))
+
+            # Write out a verbose file with the output loss and metric data for every training epoch
             filename = 'saved_models/' + run_name + '/' + "verbose.txt"
             with open(filename, "w") as text_file:
                 text_file.write(">>>> [Epoch: {0:d}] Avg. loss: {1:.4f} | Mean IoU: {2:.4f}".

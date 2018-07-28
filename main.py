@@ -24,11 +24,6 @@ from models.enet_model import ENetModel
 from src.arguments import get_args
 from src.utils import enet_weighing
 
-BATCH_SIZE = 10
-DATA_DIRECTORY = './dataset/bdd100k'
-DATA_LIST_PATH = './dataset/list/train_list.txt'
-INPUT_SIZE = '720,720'
-
 args = get_args()
 
 #Select the GPU to run the network on
@@ -40,6 +35,7 @@ def main():
     input_size = (h, w)
     crop_size = (int(h),int(w))
 
+    # Create the directory to store the checkpoints and verbose text files
     directory = 'saved_models/' + args.run_name + '/'
     if not os.path.exists(directory):
             os.makedirs(directory)
