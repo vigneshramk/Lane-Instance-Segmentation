@@ -132,7 +132,6 @@ class BDD_Test_DataSet(data.Dataset):
         self.files = []
         for name in self.img_ids:
             img_file = osp.join(self.root, "bdd100k_images/100k/test/%s.jpg" % name)
-            print(img_file)
             self.files.append({
                 "img": img_file
             })
