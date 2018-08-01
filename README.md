@@ -53,7 +53,17 @@ python main.py -g 0 -b 5 -rn test_example -m test -l saved_models/run4/checkpoin
 
 ### Directories
 
-[``dataset``] contains the dataloader codes, the dataset (not on the repository, download it yourself with the instructions given below) and list of labels that are used by the dataloader
-[``src``] contains the training and testing codes, the metrics that are used for evaluation in [``src/metrics``], the arguments and the helper functions used by the other codes.
-[``models``] contains the ENet model architecture code definitions
-[``saved_models``] contains the saved model checkpoints of our implementation inside a folder corresponding to the run_name provided at run time.
+- [``dataset``] contains the dataloader codes, the dataset (not on the repository, download it yourself with the instructions given below) and list of labels that are used by the dataloader
+
+- [``src``] contains the training and testing codes, the metrics that are used for evaluation in [``src/metrics``], the arguments and the helper functions used by the other codes.
+
+- [``models``] contains the ENet model architecture code definitions
+
+- [``saved_models``] contains the saved model checkpoints of our imple- mentation inside a folder corresponding to the run_name provided at run time.
+
+### Codes
+
+- [``src/arguments.py``] Contains all the parsable command-line options and their defaults.
+- [``dataset/bdd_dataset.py``] Contains the DataLoader classes for each of train,valid and test datasets
+- [``src/train.py``] Defines the ``TrainNetwork`` class used to train the model
+- [``src/test.py``] Defines the ``TestNetwork`` class used to test the train model 
